@@ -15,7 +15,7 @@ except AttributeError:
 
 
 class Shutdown(TemplateView):
-    template_name = 'shutdown.html'
+    template_name = 'shutdown/shutdown.html'
 
     def get(self, *args, **kwargs):
         objects = ShutDown.objects.all()
