@@ -20,7 +20,7 @@ class ShutdownMiddleware(object):
             return None
 
         if (request.path == reverse('shutdown') or
-            u'static' in request.path.split('/')
+            settings.STATIC_URL in request.path
             ):
             return None
 
