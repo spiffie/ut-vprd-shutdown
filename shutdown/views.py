@@ -32,10 +32,20 @@ class Shutdown(TemplateView):
         try:
             new_context = context(self.request, ctx)
         except UTDirectTemplateAPIError:
+            try:
+                api_key = settings.API_KEY
+            except AttributeError:
+                raise ImproperlyConfigured(
+                    'If you do not supply your own context object by setting '
+                    'a SHUTDOWN_CONTEXT in settings.py, then you must supply '
+                    'an API_KEY in your settings, which will be used to call '
+                    'the default UTDirecrContext.'
+                )
+
             new_context = context(
                 self.request,
                 dict=ctx,
-                api_key='8B54A49X54',
+                api_key=api_key,
                 page_title='Service Outage',
                 window_title='Service Outage',
             )
