@@ -1,2 +1,55 @@
-shutdown
-========
+Shutdown: _A Django App To Shut Down Your Django App_
+=====
+
+This is a simple app that can be used to bring down a PyPE django project by
+simply adding an entry to an oracle table.
+
+Usage
+=====
+
+To include this app in your PyPE project, simply pull it into your project via svn:externals.
+
+> path: extra/shutdown
+
+> URL: https://github.com/UT-Austin-FIS/shutdown/tags/v1.0/shutdown
+
+Setup
+------
+
+1. Add "shutdown" to your INSTALLED_APPS setting like this::
+
+      ```python
+            INSTALLED_APPS = (
+                ...
+                'shutdown',
+            )
+      ```
+
+2. Add the shutdown middleware to your MIDDLEWARE_CLASSES setting like this::
+
+      ```python
+            MIDDLEWARE_CLASSES= (
+                ...
+                'shutdown.middleware.ShutdownMiddleware',
+            )
+      ```
+
+3. Add an SHUTDOWN_CONTEXT object to your settings.py. This should be a class that carries the core of your page context logic. If not supplied, the UTDirectContext will be used, but you will need to supply the api key in your settings (eg: API_KEY = 'your_api_key')::
+
+      ```python
+         SHUTDOWN_CONTEXT = 'path.to.your.desired.context.object'
+      ```
+
+6. Run `python manage.py syncdb` to create the shutdown models.
+
+
+**NOTE**: 
+_Since this app creates a new table, if your database design involves multiple users, you will need to go through the same process that you typically use to migrate a table and grant privileges._
+
+
+How To Implement a Shutdown
+---------------------------
+
+Implementing a shutdown is relatively simple. You simply need to add a message entry to the SHUTDOWN_SHUTDOWN table, and all susequent requests to your application will automatically render the shutdown page with that message. Once you are ready to resume normal operations, you simply delete that record from the table.
+
+How you add and remove the record is entirely up to you. You can edit the table directly using SQL Developer, or you could write a simple interface that allows your administrative users to add/remove a table entry, and implement shutdowns as they desire.
