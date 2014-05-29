@@ -1,8 +1,6 @@
 from django.conf import settings
 from django.views.generic.base import TemplateView
 
-from utdirect.templates import UTDirectContext, UTDirectTemplateAPIError
-
 from shutdown.models import ShutDown
 
 try:
@@ -10,8 +8,10 @@ try:
     module = __import__(module_path, fromlist=[ctx_class])
     context = getattr(module, ctx_class)
 except AttributeError:
-    context = UTDirectContext
-
+    raise ImproperlyConfigured(
+        'You must supply a path your own context object by setting a '
+        'SHUTDOWN_CONTEXT in your settings.py file.'
+    )
 
 class Shutdown(TemplateView):
     template_name = 'shutdown/shutdown.html'
@@ -20,26 +20,14 @@ class Shutdown(TemplateView):
         ctx = super(Shutdown, self).get_context_data(**kwargs)
         objects = ShutDown.objects.all()
         msg = objects[0].message
-        ctx.update({'msg':msg, 'title':'Service Outage'})
-        try:
-            new_context = context(self.request, ctx)
-        except UTDirectTemplateAPIError:
-            try:
-                api_key = settings.API_KEY
-            except AttributeError:
-                raise ImproperlyConfigured(
-                    'If you do not supply your own context object by setting '
-                    'a SHUTDOWN_CONTEXT in settings.py, then you must supply '
-                    'an API_KEY in your settings, which will be used to call '
-                    'the default UTDirectContext.'
-                )
-
-            new_context = context(
-                self.request,
-                dict=ctx,
-                api_key=api_key,
-                page_title='Service Outage',
-                window_title='Service Outage',
+        ctx.update({
+            'msg':msg,
+            })
+        return context(
+            self.request,
+            ctx,
+            title='Service Outage',
+            page_title='Service Outage',
+            window_title='Service Outage',
             )
-        return new_context
 
