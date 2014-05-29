@@ -1,10 +1,9 @@
 import sys
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
 
 from shutdown.models import ShutDown
+from shutdown.views import Shutdown
 
 _using_manage = True in ['manage.py' in arg for arg in sys.argv]
 
@@ -20,12 +19,11 @@ class ShutdownMiddleware(object):
         if TESTING and 'shutdown' not in sys.argv:
             return None
 
-        if (request.path == reverse('shutdown') or
-            settings.STATIC_URL in request.path
-            ):
+        if settings.STATIC_URL in request.path:
             return None
 
         if ShutDown.objects.count() == 1:
-            return redirect('shutdown')
+            return Shutdown.as_view()(request)
 
         return None
+
