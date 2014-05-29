@@ -45,3 +45,11 @@ Setup
 
 **NOTE**: 
 _Since this app creates a new table, if your database design involves multiple users, you will need to go through the same process that you typically use to migrate a table and grant privileges._
+
+
+How To Implement a Shutdown
+---------------------------
+
+Implementing a shutdown is relatively simple. You simply need to add a message entry to the SHUTDOWN_SHUTDOWN table, and all susequent requests to your application will automatically render the shutdown page with that message. Once you are ready to resume normal operations, you simply delete that record from the table.
+
+How you add and remove the record is entirely up to you. You can edit the table directly using SQL Developer, or you could write a simple interface that allows your administrative users to add/remove a table entry, and implement shutdowns as they desire.
