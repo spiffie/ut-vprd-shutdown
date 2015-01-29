@@ -26,4 +26,3 @@ class ShutdownMiddleware(object):
             return ShutdownView.as_view()(request)
 
         return None
-
