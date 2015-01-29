@@ -3,7 +3,7 @@ import sys
 from django.conf import settings
 
 from shutdown.models import ShutDown
-from shutdown.views import Shutdown
+from shutdown.views import ShutdownView
 
 _using_manage = True in ['manage.py' in arg for arg in sys.argv]
 
@@ -23,7 +23,7 @@ class ShutdownMiddleware(object):
             return None
 
         if ShutDown.objects.count() == 1:
-            return Shutdown.as_view()(request)
+            return ShutdownView.as_view()(request)
 
         return None
 

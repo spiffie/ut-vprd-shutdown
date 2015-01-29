@@ -53,3 +53,16 @@ How To Implement a Shutdown
 Implementing a shutdown is relatively simple. You simply need to add a message entry to the SHUTDOWN_SHUTDOWN table, and all susequent requests to your application will automatically render the shutdown page with that message. Once you are ready to resume normal operations, you simply delete that record from the table.
 
 How you add and remove the record is entirely up to you. You can edit the table directly using SQL Developer, or you could write a simple interface that allows your administrative users to add/remove a table entry, and implement shutdowns as they desire.
+
+Releases
+========
+* v1.1 (2015/xx/xx)
+  * Adding support for Django 1.7, including Django Migrations
+  * Adding missing bracket in template
+  * Renaming view class from `Shutdown` to `ShutdownView`
+
+* v1.0 (2014/05/29)
+  * initial release with support for at least:
+    * Python 2.6
+    * Django 1.4
+    * South 0.7.3

@@ -13,11 +13,11 @@ except AttributeError:
         'SHUTDOWN_CONTEXT in your settings.py file.'
     )
 
-class Shutdown(TemplateView):
+class ShutdownView(TemplateView):
     template_name = 'shutdown/shutdown.html'
 
     def get_context_data(self, **kwargs):
-        ctx = super(Shutdown, self).get_context_data(**kwargs)
+        ctx = super(ShutdownView, self).get_context_data(**kwargs)
         objects = ShutDown.objects.all()
         msg = objects[0].message
         ctx.update({
