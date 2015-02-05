@@ -56,10 +56,11 @@ How you add and remove the record is entirely up to you. You can edit the table 
 
 Releases
 ========
-* v1.1 (2015/xx/xx)
+* v1.1.0 (2015/02/05)
   * Adding support for Django 1.7, including Django Migrations
   * Adding missing bracket in template
   * Renaming view class from `Shutdown` to `ShutdownView`
+  * Adding __version__ to module
 
 * v1.0 (2014/05/29)
   * initial release with support for at least:
