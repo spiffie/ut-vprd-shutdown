@@ -11,7 +11,7 @@ To include this app in your PyPE project, simply pull it into your project via s
 
 > path: extra/shutdown
 
-> URL: https://github.com/UT-Austin-FIS/shutdown/tags/v1.0/shutdown
+> URL: https://github.com/UT-Austin-FIS/shutdown/tags/v1.1.0/shutdown
 
 Setup
 ------
