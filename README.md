@@ -40,7 +40,7 @@ Setup
          SHUTDOWN_CONTEXT = 'path.to.your.desired.context.object'
       ```
 
-6. Run `python manage.py syncdb` to create the shutdown models.
+6. Run `python manage.py migrate` to create the shutdown models.
 
 
 **NOTE**: 
@@ -60,7 +60,7 @@ Releases
   * Adding support for Django 1.7, including Django Migrations
   * Adding missing bracket in template
   * Renaming view class from `Shutdown` to `ShutdownView`
-  * Adding __version__ to module
+  * Adding `__version__` to module
 
 * v1.0 (2014/05/29)
   * initial release with support for at least:
