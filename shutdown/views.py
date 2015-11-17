@@ -25,10 +25,13 @@ class ShutdownView(TemplateView):
         ctx.update({
             'msg': msg,
             })
-        return context(
+        ctx = context(
             self.request,
             ctx,
             title='Service Outage',
             page_title='Service Outage',
             window_title='Service Outage',
-            )
+        )
+        if hasattr(ctx, 'flatten'):
+            ctx = ctx.flatten()
+        return ctx
