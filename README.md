@@ -56,6 +56,9 @@ How you add and remove the record is entirely up to you. You can edit the table 
 
 Releases
 ========
+* v1.1.1 (2015/11/16)
+  * Adding support for Django 1.8, by calling .flatten() on context instances in get_context_data, to prevent RemovedInDjango110Warnings.
+
 * v1.1.0 (2015/02/05)
   * Adding support for Django 1.7, including Django Migrations
   * Adding missing bracket in template
