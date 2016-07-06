@@ -15,7 +15,7 @@ class Shutdown(models.Model):
 
     path = models.CharField(max_length=1000, help_text=('Enter a full path, including leading slash, '
                                                         'but NOT a trailing slash.'))
-    message = models.CharField(max_length=1000)
+    message = models.CharField(max_length=1000, blank=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
     is_exact_match = models.BooleanField(default=False, help_text='Select to shutdown only exact path matches.')
