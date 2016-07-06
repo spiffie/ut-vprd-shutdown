@@ -1,37 +1,50 @@
-from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
+# coding: utf-8
+# shutdown/middleware.py
+
+"""Middleware for shutdown app, downtime scheduler."""
+
+
+import datetime
+
+from django.db.models import Q
+from django.template.response import TemplateResponse
 from django.views.generic.base import TemplateView
+from django.conf import settings
 
-from shutdown.models import ShutDown
+from .models import Shutdown
 
-try:
-    module_path, ctx_class = settings.SHUTDOWN_CONTEXT.rsplit('.', 1)
-    module = __import__(module_path, fromlist=[ctx_class])
-    context = getattr(module, ctx_class)
-except AttributeError:
-    raise ImproperlyConfigured(
-        'You must supply a path your own context object by setting a '
-        'SHUTDOWN_CONTEXT in your settings.py file.'
-    )
+
+__author__ = 'David Voegtle (dvoegtle@austin.utexas.edu)'
+
+
+class ServiceUnavailableTemplateResponse(TemplateResponse):
+    """Render a template response with status code 503 (service unavailable)."""
+
+    status_code = 503
 
 
 class ShutdownView(TemplateView):
+    """Render template to display outage message to users."""
+
     template_name = 'shutdown/shutdown.html'
+    response_class = ServiceUnavailableTemplateResponse
 
     def get_context_data(self, **kwargs):
-        ctx = super(ShutdownView, self).get_context_data(**kwargs)
-        objects = ShutDown.objects.all()
-        msg = objects[0].message
-        ctx.update({
-            'msg': msg,
-            })
-        ctx = context(
-            self.request,
-            ctx,
-            title='Service Outage',
-            page_title='Service Outage',
-            window_title='Service Outage',
-        )
-        if hasattr(ctx, 'flatten'):
-            ctx = ctx.flatten()
-        return ctx
+        """Add some data to the regular context."""
+        context = super(ShutdownView, self).get_context_data(**kwargs)
+
+        now = datetime.datetime.now()
+        shutdown_now_q = Q(start_time__lte=now) & (Q(end_time__gte=now) | Q(end_time__isnull=True))
+        current_shutdowns = Shutdown.objects.filter(shutdown_now_q)
+
+        current = None
+        if current_shutdowns.count() > 0:
+            candidates = [p for p in current_shutdowns if self.request.path.startswith(p.path)]
+            if len(candidates):
+                current = candidates[0]
+
+        context.update({
+            'contact': getattr(settings, 'SECU_FAILED_CONTACT_EMAIL', 'viphelp@austin.utexas.edu'),
+            'current': current,
+        })
+        return context

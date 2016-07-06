@@ -1,11 +1,85 @@
-{{ utd_header }}
-{% block outage_content %}
-  <div id="summary">
-    <h2>System is down for maintenance.</h2>
-  </div>
-  <div id="info">
-    <p>{{ msg }}</p>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>System Down for Maintenance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+      @import url({{ webagent_url }}/utdirect/system/css/utd_typography.css);
+      @import url({{ webagent_url }}/utdirect/system/css/custom_utdirect.css);
+      @import url({{ webagent_url }}/utdirect/system/css/utd_subnav.css);
 
-{% endblock outage_content %}
-{{ utd_footer }}
+    </style>
+    <style>
+    body { background: none; background-color: white; }
+    h1 { font-size: 3em; border-bottom: 1px solid #999; padding-bottom: 10px; }
+    ul { margin: 1em 0; }
+    p { line-height: 1.75em; font-size: 1.25em; margin: 2em 0; }
+    a { font-weight: bold; }
+    blockquote { margin: 1.5em 0 1em 3em; font-size: 1.5em; line-height: 1em; }
+    blockquote:before { content: "\0201C"; color: #AAA; font-size: 5em; vertical-align: bottom; padding-top: 10px; margin-right: 10px; }
+    #utd_container { padding-left: 200px; width: 800px; }
+    </style>
+</head>
+
+<body>
+
+<div id="header"> <!-- HEADER -->
+    <div id="mainnavtext"> <!-- MAINNAVTEXT -->
+
+    </div> <!-- MAINNAVTEXT CLOSE -->
+    <div id="search_display">   <!-- SEARCH_DISPLAY -->
+        <form name="utd_search" id="search_form" action="{{ webagent_url }}/utdirect/search/index.WBX" method="get">
+            <input type="hidden" name="s_component" value="0" />
+            <input type="hidden" name="s_environment" value="PUTD" />
+            <input type="hidden" name="s_security_flag" value="S" />
+
+            <label for="search_type" class="nodisplaytext">Select the type of search to perform:</label>
+            <select  id="search_type" name="s_search_type">
+                <option  value="SS">any word</option>
+                <option  value="AW">all words</option>
+                <option  value="EX">exact phrase</option>
+            </select>
+
+            <label for="search_term" class="nodisplaytext">Enter a search term:</label>
+            <input id="search_term" type="text" name="input_srch_string" size="72" maxlength="126" title="You may search for a maximum of 7 words" value="" />
+            <input type="submit" value="search" />
+        </form>
+    </div>   <!-- SEARCH_DISPLAY CLOSE -->
+    <div id="header_bottom"> <!-- HEADER_BOTTOM -->
+    </div> <!-- HEADER_BOTTOM CLOSE -->
+
+    <div id="ut_ribbon" onclick="location.href='http://www.utexas.edu';" style="cursor:pointer;" title="Link to University of Texas homepage">  <!-- UT_RIBBON -->
+    </div>  <!-- UT_RIBBON CLOSE -->
+
+</div>  <!-- HEADER CLOSE -->
+
+
+<!-- NAVBAR_UT_DIRECT_LOGO -->
+<!--<div id="navbar_ut_direct_logo" onclick="location.href='/utdirect/index.WBX';" style="cursor:pointer;" title="Link to UT Direct homepage">
+</div>-->
+
+
+<div id="utd_container">  <!-- UTD_CONTAINER -->
+    <h1 class="highlight1">Service Unavailable (503)</h1>
+
+    <h2>System Down for Maintenance</h2>
+
+    <p>The page you are trying to reach is currently down for scheduled maintainence. {% if current.start_time %}The maintenance began at {{ current.start_time }} and {% if current.end_time %}is scheduled to end at {{ current.end_time }}{% else %}has no scheduled end time{% endif %}{% else %}There is currently no scheduled start or end time for this maintenance{% endif %}.</p>
+
+    {% if current.message %}
+    <p>There is additional information for this outage:</p>
+
+    <blockquote>{{ current.message }}</blockquote>
+    {% endif %}
+
+    <p>If this is to report a different problem or question with this application, or for more details on this outage please contact <a href="mailto:{{ contact }}">{{ contact }}</a>.</p>
+
+
+    <p>We apologize for the inconvenience; thank you for your patience.</p>
+</div>
+
+</body>
+
+</html>
+<!-- IE needs 512+ bytes: http://blogs.msdn.com/b/ieinternals/archive/2010/08/19/http-error-pages-in-internet-explorer.aspx -->
