@@ -38,8 +38,6 @@ class ShutdownMiddleware(object):
 
         now = datetime.datetime.now()
         shutdown_now_q = Q(start_time__lte=now) & (Q(end_time__gte=now) | Q(end_time__isnull=True))
-        current_shutdowns = Shutdown.objects.filter(shutdown_now_q)
-
         split_path = request.path.split('/')
         candidates = ['/'.join(split_path[:x]) for x in xrange(1, len(split_path)) if '/'.join(split_path[:x])]
         shutdown_path_q = Q()
@@ -47,13 +45,9 @@ class ShutdownMiddleware(object):
             shutdown_path_q = shutdown_path_q | Q(path=cand)
         shutdown_path_q = shutdown_path_q & Q(is_exact_match=False) | Q(path=request.path) & Q(is_exact_match=True)
 
-        current_shutdowns = current_shutdowns.filter(shutdown_now_q & shutdown_path_q)
-
-        print current_shutdowns
+        current_shutdowns = Shutdown.objects.filter(shutdown_now_q & shutdown_path_q)
 
         if current_shutdowns.count() > 0:
-            # candidates = [p for p in current_shutdowns if request.path.startswith(p.path)]
-            # if len(candidates):
             return ShutdownView.as_view()(request)
 
         return None
